@@ -1,0 +1,10 @@
+<header>
+  <title>{% block title%}{% endblock %}</title>
+</header>
+
+{% for team in teams %}
+  <a href="{% url 'team' team.id %}">{{team.name}}</a>
+{% endfor %}
+
+{% block stuff %}
+{% endblock %}

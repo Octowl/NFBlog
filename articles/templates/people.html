@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% load components %}
+
+{% block title %}PEOPLE{% endblock %}
+
+{% block stuff %}
+  <ul>
+    {% for person in people %}
+      {% person_card person %}
+    {% endfor %}
+  </ul>
+{% endblock %}
