@@ -8,7 +8,7 @@
   <h1>{{team.name}}</h1>
 
   <ul>
-    {% for person in team.members.all %}
+    {% for person in members %}
       {% person_card person %}
     {% endfor %}
   </ul>

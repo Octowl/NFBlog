@@ -16,15 +16,22 @@ def people(request):
                   context={"people": people_list})
 
 
-def person(request, person_id):
-    _person = get_object_or_404(Person, id=person_id)
+def person(request, person_slug):
+    _person = get_object_or_404(Person, slug=person_slug)
+    context = {}
+    context["person"] = _person
+    context["person_teams"] = _person.teams.all()
     return render(request,
                   "person.html",
-                  context={"person": _person})
+                  context=context)
 
 
-def team(request, team_id):
-    _team = get_object_or_404(Team, id=team_id)
+def team(request, team_slug):
+    _team = get_object_or_404(Team, slug=team_slug)
+
+    context = {}
+    context["team"] = _team
+    context["members"] = _team.members.all()
     return render(request,
                   "team.html",
-                  context={"team": _team})
+                  context=context)

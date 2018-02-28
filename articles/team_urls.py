@@ -4,5 +4,5 @@ from . import views
 
 
 urlpatterns = [
-    path('<int:team_id>', views.team, name="team"),
+    path('<slug:team_slug>', views.team, name="team"),
 ]

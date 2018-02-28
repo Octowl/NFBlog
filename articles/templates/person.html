@@ -5,14 +5,12 @@
 {% endblock %}
 
 {% block stuff %}
-  {% if person.profile_picture %}
-    <img src={{person.profile_picture.url}}  />
-  {% endif %}
   <h1>{{person.name}}</h1>
+  <img src={{person.get_profile_picture}}  />
   <h2>{{person.age}}</h2>
-  {% if person.team %}
-    <a href="{% url 'team' person.team.id %}">
-      {{person.team.name}}
+  {% for team in person_teams %}
+    <a href="{% url 'team' team.slug %}">
+      {{team.name}}
     </a>
-  {% endif %}
+  {% endfor %}
 {% endblock %}
