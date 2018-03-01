@@ -1,5 +1,7 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404
+
 from .models import Person, Team
+from .forms import PersonForm
 
 
 def home(request):
@@ -24,6 +26,17 @@ def person(request, person_slug):
     return render(request,
                   "person.html",
                   context=context)
+
+
+def add_person(request):
+    if request.method == 'POST':
+        form = PersonForm(request.POST)
+        if form.is_valid():
+            new_person = form.save()
+            return redirect(new_person)
+    form = PersonForm()
+    context = {"form": form}
+    return render(request, "add_person.html", context)
 
 
 def team(request, team_slug):

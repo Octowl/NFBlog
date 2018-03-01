@@ -2,6 +2,8 @@ from django.template.defaultfilters import slugify
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
 
+from django.urls import reverse
+
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 
@@ -31,6 +33,9 @@ class Person(models.Model):
 
     def __str__(self):
         return self.name
+
+    def get_absolute_url(self):
+        return reverse('person', args=[self.slug])
 
     def get_profile_picture(self):
         if self.profile_picture and hasattr(self.profile_picture, 'url'):
