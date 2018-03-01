@@ -1,9 +1,12 @@
 {% extends "base.html" %}
+{% load crispy_forms_tags %}
 
 {% block stuff %}
   <form action="{% url 'add_person' %}" method="POST">
     {% csrf_token %}
-    {{form}}
+    <div class="form-control">
+      {{form|crispy}}
+    </div>
     <input type="submit" name="" value="Add Person">
   </form>
 {% endblock %}
