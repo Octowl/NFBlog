@@ -1,0 +1,5 @@
+{% extends "add_person.html" %}
+
+{% block card_header %}Edit {{person.name}}{% endblock %}</h4>
+{% block form_action %}{% url 'update_person' person.slug %}{% endblock %}
+{% block button_text %}Edit {{person.name}}{% endblock %}

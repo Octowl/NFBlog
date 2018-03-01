@@ -34,9 +34,27 @@ def add_person(request):
         if form.is_valid():
             new_person = form.save()
             return redirect(new_person)
-    form = PersonForm()
-    context = {"form": form}
-    return render(request, "add_person.html", context)
+    else:
+        form = PersonForm()
+        context = {"form": form}
+        return render(request, "add_person.html", context)
+
+
+def update_person(request, person_slug):
+    person = Person.objects.get(slug=person_slug)
+
+    if request.method == 'POST':
+        form = PersonForm(request.POST, instance=person)
+        if form.is_valid():
+            form.save()
+            return redirect(person)
+    else:
+        form = PersonForm(instance=person)
+        context = {
+            "person": person,
+            "form": form
+        }
+        return render(request, "update_person.html", context)
 
 
 def team(request, team_slug):
