@@ -27,7 +27,7 @@ class Person(models.Model):
     age = models.PositiveIntegerField()
     profile_picture = models.ImageField(upload_to='profile_pictures', blank=True)
     is_special = models.BooleanField(default=False)
-    teams = models.ManyToManyField(Team, related_name="members")
+    teams = models.ManyToManyField(Team, related_name="members", blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     slug = models.SlugField(blank=True, unique=True)
 
