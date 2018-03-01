@@ -1,6 +1,8 @@
 from django.contrib import admin
+from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
+from django.contrib.auth.models import User
 
-from .models import Person, Team
+from .models import Person, Team, Profile
 
 
 class PersonAdmin(admin.ModelAdmin):
@@ -8,5 +10,17 @@ class PersonAdmin(admin.ModelAdmin):
     search_fields = ['name', 'age']
 
 
+class ProfileInline(admin.StackedInline):
+    model = Profile
+    can_delete = False
+
+
+class UserAdmin(BaseUserAdmin):
+    inlines = (ProfileInline,)
+
+
 admin.site.register(Person, PersonAdmin)
 admin.site.register(Team)
+
+admin.site.unregister(User)
+admin.site.register(User, UserAdmin)
