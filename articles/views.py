@@ -57,6 +57,11 @@ def update_person(request, person_slug):
         return render(request, "update_person.html", context)
 
 
+def delete_person(request, person_id):
+    Person.objects.get(id=person_id).delete()
+    return redirect("people")
+
+
 def team(request, team_slug):
     _team = get_object_or_404(Team, slug=team_slug)
 

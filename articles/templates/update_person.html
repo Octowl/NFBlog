@@ -3,3 +3,6 @@
 {% block card_header %}Edit {{person.name}}{% endblock %}</h4>
 {% block form_action %}{% url 'update_person' person.slug %}{% endblock %}
 {% block button_text %}Save{% endblock %}
+{% block delete_button %}
+  <a class="btn btn-danger" href="{% url 'delete_person' person.id %}">Delete</a>
+{% endblock %}
