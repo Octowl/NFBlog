@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block stuff %}
+  <div class="container d-flex justify-content-center">
+    <div class="col-6">
+      <div class="card">
+        <h4 class="card-header">Signup</h4>
+        <div class="card-body">
+          <form action="{% url 'signup' %}" method="POST">
+            {% csrf_token %}
+            {% if user_form.errors %}
+                <div class="form-group has-error">
+                  <span class="help-block">{{ user_form.text.errors }}</span>
+                </div>
+            {% endif %}
+            {% if profile_form.errors %}
+                <div class="form-group has-error">
+                  <span class="help-block">{{ profile_form.text.errors }}</span>
+                </div>
+            {% endif %}
+            {{user_form|crispy}}
+            {{profile_form|crispy}}
+            <input class="btn btn-primary" type="submit" name="" value="Signup">
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

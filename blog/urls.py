@@ -19,11 +19,13 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 
-from articles import views
+import articles.views
+import profiles.views
 
 urlpatterns = [
-    path('', views.home, name="home"),
+    path('', articles.views.home, name="home"),
     path('people/', include('articles.urls')),
     path('teams/', include('articles.team_urls')),
     path('admin/', admin.site.urls),
+    path('signup/', profiles.views.signup, name="signup")
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
