@@ -1,4 +1,4 @@
-from django.template.defaultfilters import slugify
+from django.utils.text import slugify
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
 
@@ -67,7 +67,7 @@ class Profile(models.Model):
 
 
 def create_slug(instance, Model, field_name, new_slug=None):
-    slug = new_slug or slugify(getattr(instance, field_name))
+    slug = new_slug or slugify(getattr(instance, field_name), allow_unicode=True)
     qs = Model.objects.filter(slug=slug).order_by('-id')
     if qs.exists():
         new_slug = f'{slug}-{qs.first().id}'
