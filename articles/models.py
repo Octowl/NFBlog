@@ -35,7 +35,7 @@ class Person(models.Model):
     def get_profile_picture(self):
         if self.profile_picture and hasattr(self.profile_picture, 'url'):
             return self.profile_picture.url
-        return 'https://www.fillmurray.com/200/300'
+        return 'http://lorempixel.com/400/200/people'
 
     class Meta:
         ordering = ['name']
