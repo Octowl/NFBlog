@@ -4,18 +4,24 @@
 {% block form_header %}Signup{% endblock %}
 {% block form_action %}{% url 'signup' %}{% endblock %}
 {% block form-content %}
-  {% if user_form.errors %}
+  {% if form.errors %}
       <div class="form-group has-error">
-        <span class="help-block">{{ user_form.text.errors }}</span>
+        <span class="help-block">{{ form.text.errors }}</span>
       </div>
   {% endif %}
-  {% if profile_form.errors %}
-      <div class="form-group has-error">
-        <span class="help-block">{{ profile_form.text.errors }}</span>
-      </div>
-  {% endif %}
-  {{user_form|crispy}}
-  {{profile_form|crispy}}
+  {{form|crispy}}
+  <div id="div_id_type" class="form-group">
+    <label for="id_type" class="form-control-label  requiredField">
+      Type<span class="asteriskField">*</span>
+    </label>
+    <div class="">
+      <select name="type" class="select form-control" required="" id="id_type">
+        <option value="" selected="">---------</option>
+        <option value="I">Individual</option>
+        <option value="O">Orginization</option>
+      </select>
+    </div>
+  </div>
 {% endblock %}
 
 {% block submit-value %}Signup{% endblock %}

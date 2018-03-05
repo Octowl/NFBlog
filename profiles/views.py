@@ -2,24 +2,38 @@ from django.contrib.auth import login, authenticate
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm
 
-from .forms import ProfileForm
+from .forms import IndividualProfileForm, CompanyProfileForm
 
 
 def signup(request):
-    user_form = UserCreationForm(request.POST)
-    profile_form = ProfileForm(request.POST)
-    if user_form.is_valid() and profile_form.is_valid():
-        user = user_form.save()
-        profile = profile_form.save(commit=False)
-        profile.user = user
-        profile.save()
+    form = UserCreationForm(request.POST)
+    if form.is_valid():
+        user = form.save()
 
-        password = user_form.cleaned_data.get('password1')
+        password = form.cleaned_data.get('password1')
         user = authenticate(username=user.username, password=password)
         login(request, user)
-        return redirect('home')
+
+        profile_type = request.POST.get('type')
+        return redirect('create_profile', profile_type=profile_type)
     else:
         return render(request, 'signup.html', {
-            "user_form": user_form,
-            "profile_form": profile_form
+            "form": form,
         })
+
+
+def create_profile(request, profile_type):
+    if profile_type == 'I':
+        form = IndividualProfileForm(request.POST)
+    else:
+        form = CompanyProfileForm(request.POST)
+
+    print(form)
+
+    if form.is_valid():
+        profile = form.save(commit=False)
+        profile.user = request.user
+        profile.save()
+        print(profile)
+        return redirect('home')
+    return render(request, 'create_profile.html', {"form": form})

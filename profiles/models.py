@@ -13,7 +13,7 @@ def validate_civil_id(civil_id):
         )
 
 
-class Profile(models.Model):
+class IndividualProfile(models.Model):
 
     GENDER_CHOICES = (
         ("M", "male"),
@@ -22,4 +22,11 @@ class Profile(models.Model):
 
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     civil_id = models.PositiveIntegerField(validators=[validate_civil_id])
-    gender = models.CharField(max_length=1, choices=GENDER_CHOICES)
+    gender = models.CharField(blank=True, max_length=1, choices=GENDER_CHOICES)
+    website = models.URLField(blank=True)
+
+
+class CompanyProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    website = models.URLField()
+    location_url = models.URLField()
