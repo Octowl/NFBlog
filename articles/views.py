@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.urls import reverse
 
 from .models import Person, Team
 from .forms import PersonForm
@@ -33,7 +34,7 @@ def add_person(request):
         form = PersonForm(request.POST)
         if form.is_valid():
             new_person = form.save()
-            return redirect(new_person)
+            return redirect(reverse('person', args=[new_person.slug]))
     else:
         form = PersonForm()
         context = {"form": form}

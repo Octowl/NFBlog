@@ -11,7 +11,13 @@
   <a href="{% url 'team' team.slug %}">{{team.name}}</a>
 {% endfor %}
 
-{{user.username}}
+{% if user.username %}
+  {{user.username}}
+  <a href="{% url 'logout' %}">Logout</a>
+{% else %}
+  <a href="{% url 'login' %}">Login</a>
+  <a href="{% url 'signup' %}">Signup</a>
+{% endif %}
 
 {% block stuff %}
 {% endblock %}

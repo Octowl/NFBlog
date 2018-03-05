@@ -105,6 +105,8 @@ AUTH_PASSWORD_VALIDATORS = [
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
+LOGIN_REDIRECT_URL = 'home'
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.0/topics/i18n/

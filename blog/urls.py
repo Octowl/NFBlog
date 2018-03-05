@@ -19,13 +19,20 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 
-import articles.views
-import profiles.views
+import django.contrib.auth.views as auth_views
+import articles.views as article_views
+import profiles.views as profile_views
 
 urlpatterns = [
-    path('', articles.views.home, name="home"),
+    path('', article_views.home, name="home"),
     path('people/', include('articles.urls')),
     path('teams/', include('articles.team_urls')),
     path('admin/', admin.site.urls),
-    path('signup/', profiles.views.signup, name="signup")
+    path('signup/', profile_views.signup, name="signup"),
+    path('login/', auth_views.login, {
+        'template_name': 'login.html'
+    }, name="login"),
+    path('logout/', auth_views.logout, {
+        'next_page': '/'
+    }, name="logout"),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
