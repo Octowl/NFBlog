@@ -6,7 +6,7 @@
 {% block form-content %}
   {% if form.errors %}
   <div class="form-group has-error">
-    <span class="help-block">{{ user_form.text.errors }}</span>
+    <span class="help-block">{{ form.text.errors }}</span>
   </div>
   {% endif %}
   {{form|crispy}}
