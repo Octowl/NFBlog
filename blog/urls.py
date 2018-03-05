@@ -27,7 +27,7 @@ urlpatterns = [
     path('', article_views.home, name="home"),
     path('people/', include('articles.urls')),
     path('teams/', include('articles.team_urls')),
-    path('profiles/create_profile/<slug:profile_type>', profile_views.create_profile, name="create_profile"),
+    path('profiles/', include('profiles.urls')),
     path('signup/', profile_views.signup, name="signup"),
     path('login/', auth_views.login, {
         'template_name': 'login.html'
