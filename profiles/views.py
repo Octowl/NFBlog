@@ -19,4 +19,7 @@ def signup(request):
         login(request, user)
         return redirect('home')
     else:
-        return render(request, 'signup.html', {"user_form": user_form, "profile_form": profile_form})
+        return render(request, 'signup.html', {
+            "user_form": user_form,
+            "profile_form": profile_form
+        })
