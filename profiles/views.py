@@ -1,5 +1,6 @@
 from django.contrib.auth import login, authenticate
 from django.shortcuts import render, redirect
+from django.http import Http404
 from django.contrib.auth.forms import UserCreationForm
 
 from .forms import IndividualProfileForm, CompanyProfileForm
@@ -23,10 +24,12 @@ def signup(request):
 
 
 def create_profile(request, profile_type):
-    if profile_type == 'I':
+    if profile_type == 'individual':
         form = IndividualProfileForm(request.POST)
-    else:
+    elif profile_type == 'company':
         form = CompanyProfileForm(request.POST)
+    else:
+        raise Http404("what you do?")
 
     print(form)
 
