@@ -34,6 +34,5 @@ def create_profile(request, profile_type):
         profile = form.save(commit=False)
         profile.user = request.user
         profile.save()
-        print(profile)
         return redirect('home')
     return render(request, 'create_profile.html', {"form": form})
