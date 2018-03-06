@@ -1,12 +1,13 @@
 from django.utils.text import slugify
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
+from django.contrib.auth import get_user_model
 
 from django.urls import reverse
 
 from django.db import models
 
-import random
+User = get_user_model()
 
 
 class Team(models.Model):
@@ -25,6 +26,7 @@ class Person(models.Model):
     teams = models.ManyToManyField(Team, related_name="members", blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     slug = models.SlugField(blank=True, unique=True)
+    creator = models.ForeignKey(User, blank=True, null=True, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name

@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
+from django.core.exceptions import PermissionDenied
 
 from .models import Person, Team
 from .forms import PersonForm
@@ -30,13 +31,17 @@ def person(request, person_slug):
 
 
 def add_person(request):
+    if not request.user.is_authenticated:
+        raise PermissionDenied
+
+    form = PersonForm(request.POST)
     if request.method == 'POST':
-        form = PersonForm(request.POST)
         if form.is_valid():
-            new_person = form.save()
+            new_person = form.save(commit=False)
+            new_person.creator = request.user
+            new_person.save()
             return redirect(reverse('person', args=[new_person.slug]))
     else:
-        form = PersonForm()
         context = {"form": form}
         return render(request, "add_person.html", context)
 

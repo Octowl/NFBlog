@@ -4,9 +4,11 @@
 {% block title %}PEOPLE{% endblock %}
 
 {% block stuff %}
-  <a class="btn btn-primary" href="{% url 'add_person' %}">
-    Add New Person
-  </a>
+  {% if user.is_authenticated %}
+    <a class="btn btn-primary" href="{% url 'add_person' %}">
+      Add New Person
+    </a>
+  {% endif %}
   <ul>
     {% for person in people %}
       {% person_card person %}
