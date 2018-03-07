@@ -21,6 +21,7 @@ class Team(models.Model):
 class Person(models.Model):
     name = models.CharField(max_length=10)
     age = models.PositiveIntegerField()
+    bio = models.TextField(blank=True)
     profile_picture = models.ImageField(upload_to='profile_pictures', blank=True)
     is_special = models.BooleanField(default=False)
     teams = models.ManyToManyField(Team, related_name="members", blank=True)

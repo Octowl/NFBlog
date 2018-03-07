@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.core.exceptions import PermissionDenied
+from django.db.models import Q
 
 from .models import Person, Team
 from .forms import PersonForm
@@ -15,6 +16,10 @@ def home(request):
 
 def people(request):
     people_list = Person.objects.all()
+    query = request.GET.get('search')
+    if query:
+        people_list = people_list.filter(Q(name__icontains=query) | Q(bio__icontains=query)).distinct()
+
     return render(request,
                   "people.html",
                   context={"people": people_list})
