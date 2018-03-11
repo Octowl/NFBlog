@@ -7,6 +7,18 @@ from .models import Person, Team
 from .forms import PersonForm
 
 
+from django.views.decorators.csrf import csrf_exempt
+
+
+@csrf_exempt
+def test(request):
+    print("POST:\n")
+    print(request.POST or "lol")
+    print("\nGET:\n")
+    print(request.GET)
+    return render(request, 'test.html', {"post": request.POST, "get": request.GET})
+
+
 def home(request):
     special_people = Person.objects.all().filter(is_special=True)
     return render(request,

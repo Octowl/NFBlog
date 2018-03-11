@@ -25,6 +25,7 @@ import profiles.views as profile_views
 
 urlpatterns = [
     path('', article_views.home, name="home"),
+    path('test/', article_views.test, name="test"),
     path('people/', include('articles.urls')),
     path('teams/', include('articles.team_urls')),
     path('profiles/', include('profiles.urls')),
