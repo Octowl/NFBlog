@@ -1,5 +1,5 @@
 from django.utils.text import slugify
-from django.db.models.signals import pre_save
+from django.db.models.signals import pre_save, m2m_changed
 from django.dispatch import receiver
 from django.contrib.auth import get_user_model
 
@@ -28,6 +28,8 @@ class Person(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     slug = models.SlugField(blank=True, unique=True)
     creator = models.ForeignKey(User, blank=True, null=True, on_delete=models.CASCADE)
+    liked_by = models.ManyToManyField(User, related_name="squad", blank=True)
+    likes = models.PositiveIntegerField(default=0)
 
     def __str__(self):
         return self.name
@@ -42,6 +44,12 @@ class Person(models.Model):
 
     class Meta:
         ordering = ['name']
+
+
+@receiver(m2m_changed, sender=Person.liked_by.through)
+def update_likes(sender, instance, **kwargs):
+    instance.likes = instance.liked_by.all().count()
+    instance.save()
 
 
 def create_slug(instance, Model, field_name, new_slug=None):
