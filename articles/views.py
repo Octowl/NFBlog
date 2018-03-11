@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.http import JsonResponse
 from django.urls import reverse
 from django.core.exceptions import PermissionDenied
 from django.db.models import Q
@@ -42,6 +43,7 @@ def person(request, person_slug):
     context = {}
     context["person"] = _person
     context["person_teams"] = _person.teams.all()
+    context["is_liked"] = request.user in _person.liked_by.all()
     return render(request,
                   "person.html",
                   context=context)
@@ -78,6 +80,15 @@ def update_person(request, person_slug):
             "form": form
         }
         return render(request, "update_person.html", context)
+
+
+def like(request, person_slug):
+    person = get_object_or_404(Person, slug=person_slug)
+    if request.user not in person.liked_by.all():
+        person.liked_by.add(request.user)
+    else:
+        person.liked_by.remove(request.user)
+    return JsonResponse({'like_count': person.likes})
 
 
 def delete_person(request, person_id):
