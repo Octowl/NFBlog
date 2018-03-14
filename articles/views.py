@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.core.exceptions import PermissionDenied
 from django.db.models import Q
 
@@ -9,7 +9,9 @@ from django.views.generic import (ListView,
                                   DetailView,
                                   UpdateView,
                                   DeleteView)
-# from django.contrib.auth.mixins import ()
+
+from django.contrib.auth.mixins import (LoginRequiredMixin,
+                                        UserPassesTestMixin)
 
 from .models import Person, Team
 from .forms import PersonForm
@@ -56,46 +58,31 @@ class PersonDetail(DetailView):
         return context
 
 
-def add_person(request):
-    if not request.user.is_authenticated:
-        raise PermissionDenied
-
-    form = PersonForm(request.POST)
-    if request.method == 'POST':
-        if form.is_valid():
-            new_person = form.save(commit=False)
-            new_person.creator = request.user
-            new_person.save()
-            return redirect(reverse('person', args=[new_person.slug]))
-    else:
-        context = {"form": form}
-        return render(request, "add_person.html", context)
-
-
-class AddPerson(CreateView):
+class AddPerson(LoginRequiredMixin, CreateView):
     model = Person
     form_class = PersonForm
 
-def update_person(request, person_slug):
-    person = Person.objects.get(slug=person_slug)
-
-    if request.method == 'POST':
-        form = PersonForm(request.POST, instance=person)
-        if form.is_valid():
-            form.save()
-            return redirect(person)
-    else:
-        form = PersonForm(instance=person)
-        context = {
-            "person": person,
-            "form": form
-        }
-        return render(request, "update_person.html", context)
+    def form_valid(self, form):
+        form.instance.creator = self.request.user
+        return super().form_valid(form)
 
 
-def delete_person(request, person_id):
-    Person.objects.get(id=person_id).delete()
-    return redirect("people")
+class UpdatePerson(UserPassesTestMixin, UpdateView):
+    model = Person
+    form_class = PersonForm
+    raise_exception = True
+
+    def test_func(self):
+        return self.request.user == self.get_object().creator
+
+
+class DeletePerson(UserPassesTestMixin, DeleteView):
+    model = Person
+    success_url = reverse_lazy('people')
+    raise_exception = True
+
+    def test_func(self):
+        return self.request.user == self.get_object().creator
 
 
 def like(request, person_slug):
