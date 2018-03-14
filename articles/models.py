@@ -44,6 +44,7 @@ class Person(models.Model):
 
     class Meta:
         ordering = ['name']
+        verbose_name_plural = 'people'
 
 
 @receiver(m2m_changed, sender=Person.liked_by.through)
