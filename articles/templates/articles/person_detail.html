@@ -15,9 +15,11 @@
   <img src={{person.get_profile_picture}}  />
   {{person.bio|markdown}}
   <p>Created by: {{person.creator.username}}</p>
-  <a class="btn btn-primary" href="{% url 'update_person' person.slug %}">
-    Edit
-  </a>
+  {% if can_edit %}
+    <a class="btn btn-primary" href="{% url 'update_person' person.slug %}">
+      Edit
+    </a>
+  {% endif %}
   <button class="btn" onclick="like('{% url "like" person.slug %}')">
     <span id="likes_count">{{person.likes}}</span>
     <span id="heart" class="fas fa-heart {% if is_liked %}text-danger{% else %}text-muted{% endif %}

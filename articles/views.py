@@ -4,9 +4,15 @@ from django.urls import reverse
 from django.core.exceptions import PermissionDenied
 from django.db.models import Q
 
+from django.views.generic import (ListView,
+                                  CreateView,
+                                  DetailView,
+                                  UpdateView,
+                                  DeleteView)
+# from django.contrib.auth.mixins import ()
+
 from .models import Person, Team
 from .forms import PersonForm
-
 
 from django.views.decorators.csrf import csrf_exempt
 
@@ -20,33 +26,34 @@ def test(request):
     return render(request, 'test.html', {"post": request.POST, "get": request.GET})
 
 
-def home(request):
-    special_people = Person.objects.all().filter(is_special=True)
-    return render(request,
-                  "home.html",
-                  context={"people": special_people})
+class Home(ListView):
+    context_object_name = 'people'
+    template_name = 'home.html'
+    queryset = Person.objects.all().filter(is_special=True)
 
 
-def people(request):
-    people_list = Person.objects.all()
-    query = request.GET.get('search')
-    if query:
-        people_list = people_list.filter(Q(name__icontains=query) | Q(bio__icontains=query)).distinct()
+class PeopleView(ListView):
+    model = Person
+    context_object_name = 'people'
 
-    return render(request,
-                  "people.html",
-                  context={"people": people_list})
+    def get_queryset(self):
+        people_list = super().get_queryset()
+        query = self.request.GET.get('search')
+        if query:
+            people_list = people_list.filter(Q(name__icontains=query) | Q(bio__icontains=query)).distinct()
+        return people_list
 
 
-def person(request, person_slug):
-    _person = get_object_or_404(Person, slug=person_slug)
-    context = {}
-    context["person"] = _person
-    context["person_teams"] = _person.teams.all()
-    context["is_liked"] = request.user in _person.liked_by.all()
-    return render(request,
-                  "person.html",
-                  context=context)
+class PersonDetail(DetailView):
+    model = Person
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        person = context.get('person')
+        context['person_teams'] = person.teams.all()
+        context['is_liked'] = self.request.user in person.liked_by.all()
+        context['can_edit'] = self.request.user == person.creator
+        return context
 
 
 def add_person(request):
@@ -65,6 +72,10 @@ def add_person(request):
         return render(request, "add_person.html", context)
 
 
+class AddPerson(CreateView):
+    model = Person
+    form_class = PersonForm
+
 def update_person(request, person_slug):
     person = Person.objects.get(slug=person_slug)
 
@@ -82,6 +93,11 @@ def update_person(request, person_slug):
         return render(request, "update_person.html", context)
 
 
+def delete_person(request, person_id):
+    Person.objects.get(id=person_id).delete()
+    return redirect("people")
+
+
 def like(request, person_slug):
     person = get_object_or_404(Person, slug=person_slug)
     if request.user not in person.liked_by.all():
@@ -89,11 +105,6 @@ def like(request, person_slug):
     else:
         person.liked_by.remove(request.user)
     return JsonResponse({'like_count': person.likes})
-
-
-def delete_person(request, person_id):
-    Person.objects.get(id=person_id).delete()
-    return redirect("people")
 
 
 def team(request, team_slug):
