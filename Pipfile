@@ -9,7 +9,7 @@ name = "pypi"
 
 django = "==2.0.2"
 django-crispy-forms = "==1.7.0"
-pillow = "==5.0.0"
+pillow = "==8.1.1"
 pytz = "==2018.3"
 django-markdown-deux = "*"
 
