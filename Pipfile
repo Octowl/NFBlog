@@ -7,7 +7,7 @@ name = "pypi"
 
 [packages]
 
-django = "==2.0.2"
+django = "==2.2.24"
 django-crispy-forms = "==1.7.0"
 pillow = "==5.0.0"
 pytz = "==2018.3"
